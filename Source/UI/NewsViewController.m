@@ -43,6 +43,7 @@
 - (void)refresh {
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://bits.blogs.nytimes.com/feed/"]];
 
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     [NSURLConnection sendAsynchronousRequest:request queue:self.downloadQueue completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
         if (error == nil) {
             self.articles = [Article parseArticlesFromFeed:data];
@@ -50,6 +51,8 @@
                 [self.tableView reloadData];
             });
         }
+
+        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     }];
 }
 
