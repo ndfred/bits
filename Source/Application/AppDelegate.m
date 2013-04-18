@@ -7,12 +7,15 @@
 //
 
 #import "AppDelegate.h"
+#import "NewsViewController.h"
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     UIWindow *window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:[NewsViewController new]];
 
+    window.rootViewController = navigationController;
     self.window = window;
     [window makeKeyAndVisible];
 
