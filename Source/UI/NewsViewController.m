@@ -7,10 +7,12 @@
 //
 
 #import "NewsViewController.h"
+#import "Article.h"
 
 @interface NewsViewController ()
 
-@property (strong) NSOperationQueue *imagesDownloadQueue;
+@property NSArray *articles;
+@property NSOperationQueue *downloadQueue;
 
 - (void)refresh;
 
@@ -22,7 +24,7 @@
     self = [super initWithStyle:style];
 
     if (self) {
-        self.imagesDownloadQueue = [[NSOperationQueue alloc] init];
+        self.downloadQueue = [[NSOperationQueue alloc] init];
         self.title = @"Bits Blog";
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh
                                                                                                target:self
@@ -32,8 +34,23 @@
     return self;
 }
 
+- (void)viewDidLoad {
+    [super viewDidLoad];
+
+    [self refresh];
+}
+
 - (void)refresh {
-    [self.tableView reloadData];
+    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://bits.blogs.nytimes.com/feed/"]];
+
+    [NSURLConnection sendAsynchronousRequest:request queue:self.downloadQueue completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+        if (error == nil) {
+            self.articles = [Article parseArticlesFromFeed:data];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.tableView reloadData];
+            });
+        }
+    }];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -41,24 +58,25 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 1;
+    return [self.articles count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *reuseIdentifier = @"NewsCell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier];
+    Article *article = [self.articles objectAtIndex:indexPath.row];
 
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier];
     }
 
-    cell.textLabel.text = @"There’s Something About Smartwatches";
+    cell.textLabel.text = article.title;
     cell.imageView.image = [UIImage imageNamed:@"Icon.png"];
 
-    {
-        NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:@"http://graphics8.nytimes.com/images/2013/04/17/technology/17bits-wrist/17bits-wrist-thumbStandard.jpg"]];
+    if (article.imageURL != nil) {
+        NSURLRequest *request = [[NSURLRequest alloc] initWithURL:article.imageURL];
 
-        [NSURLConnection sendAsynchronousRequest:request queue:self.imagesDownloadQueue completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+        [NSURLConnection sendAsynchronousRequest:request queue:self.downloadQueue completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
             if (error == nil) {
                 UIImage *image = [UIImage imageWithData:data];
 
@@ -73,7 +91,8 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:@"http://bits.blogs.nytimes.com/2013/04/17/smartwatches/"]];
+    Article *article = [self.articles objectAtIndex:indexPath.row];
+    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:article.linkURL];
     UIViewController *webViewController = [UIViewController new];
     UIWebView *webView = [UIWebView new];
 
