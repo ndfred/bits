@@ -12,6 +12,10 @@
 		B6EB1A87171FECAB00C78511 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B6EB1A86171FECAB00C78511 /* CoreGraphics.framework */; };
 		B6EB1AA9171FED6300C78511 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B6EB1AA4171FED6300C78511 /* AppDelegate.m */; };
 		B6EB1AAA171FED6300C78511 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B6EB1AA5171FED6300C78511 /* main.m */; };
+		B6EB1AB0171FF0F500C78511 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = B6EB1AAB171FF0F500C78511 /* Icon-72.png */; };
+		B6EB1AB1171FF0F500C78511 /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B6EB1AAC171FF0F500C78511 /* Icon-72@2x.png */; };
+		B6EB1AB2171FF0F500C78511 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = B6EB1AAD171FF0F500C78511 /* Icon.png */; };
+		B6EB1AB3171FF0F500C78511 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B6EB1AAE171FF0F500C78511 /* Icon@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -23,6 +27,11 @@
 		B6EB1AA3171FED6300C78511 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		B6EB1AA4171FED6300C78511 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		B6EB1AA5171FED6300C78511 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		B6EB1AAB171FF0F500C78511 /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72.png"; sourceTree = "<group>"; };
+		B6EB1AAC171FF0F500C78511 /* Icon-72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72@2x.png"; sourceTree = "<group>"; };
+		B6EB1AAD171FF0F500C78511 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
+		B6EB1AAE171FF0F500C78511 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
+		B6EB1AAF171FF0F500C78511 /* download_assets.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = download_assets.sh; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,6 +79,11 @@
 		B6EB1A9F171FED6300C78511 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				B6EB1AAB171FF0F500C78511 /* Icon-72.png */,
+				B6EB1AAC171FF0F500C78511 /* Icon-72@2x.png */,
+				B6EB1AAD171FF0F500C78511 /* Icon.png */,
+				B6EB1AAE171FF0F500C78511 /* Icon@2x.png */,
+				B6EB1AAF171FF0F500C78511 /* download_assets.sh */,
 				B6EB1AA0171FED6300C78511 /* Info.plist */,
 			);
 			path = Resources;
@@ -160,6 +174,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B6EB1AB0171FF0F500C78511 /* Icon-72.png in Resources */,
+				B6EB1AB1171FF0F500C78511 /* Icon-72@2x.png in Resources */,
+				B6EB1AB2171FF0F500C78511 /* Icon.png in Resources */,
+				B6EB1AB3171FF0F500C78511 /* Icon@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -239,6 +257,7 @@
 			buildSettings = {
 				INFOPLIST_FILE = Resources/Info.plist;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -248,6 +267,7 @@
 			buildSettings = {
 				INFOPLIST_FILE = Resources/Info.plist;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
