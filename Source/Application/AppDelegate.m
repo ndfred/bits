@@ -8,7 +8,9 @@
 
 #import "AppDelegate.h"
 #import "NewsViewController.h"
+#import "URLCache.h"
 
+//#define REMOVE_CACHE
 //#define GENERATE_SPLASHSCREEN_IMAGE
 
 #ifdef GENERATE_SPLASHSCREEN_IMAGE
@@ -18,12 +20,32 @@
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    UIWindow *window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:[NewsViewController new]];
+#ifdef REMOVE_CACHE
+    {
+        NSString *cachePath = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject];
+        NSString *httpCachePath = [cachePath stringByAppendingPathComponent:[[NSBundle mainBundle] bundleIdentifier]];
+        NSString *pdfCachePath = [cachePath stringByAppendingPathComponent:@"PDFs"];
+        
+        NSLog(@"Removing HTTP cache: %@", httpCachePath);
+        [[NSFileManager defaultManager] removeItemAtPath:httpCachePath error:nil];
+        NSLog(@"Removing PDF cache: %@", pdfCachePath);
+        [[NSFileManager defaultManager] removeItemAtPath:pdfCachePath error:nil];
+    }
+#endif
 
-    window.rootViewController = navigationController;
-    self.window = window;
-    [window makeKeyAndVisible];
+    // Setup the URL cache
+    [NSURLCache setSharedURLCache:[URLCache new]];
+    [[URLCache sharedURLCache] setForceCachedRequests:YES];
+
+    // Setup the view controller
+    {
+        UIWindow *window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+        UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:[NewsViewController new]];
+
+        window.rootViewController = navigationController;
+        self.window = window;
+        [window makeKeyAndVisible];
+    }
 
 #ifdef GENERATE_SPLASHSCREEN_IMAGE
     dispatch_async(dispatch_get_main_queue(), ^{

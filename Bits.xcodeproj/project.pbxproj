@@ -26,6 +26,7 @@
 		B6EB1B0A17200ACA00C78511 /* Default~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = B6EB1B0317200ACA00C78511 /* Default~iphone.png */; };
 		B6EB1B1017200B8D00C78511 /* Article.m in Sources */ = {isa = PBXBuildFile; fileRef = B6EB1B0F17200B8D00C78511 /* Article.m */; };
 		B6EB1B1217200CFB00C78511 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B6EB1B1117200CFB00C78511 /* libxml2.dylib */; };
+		B6EB1B1517201DEF00C78511 /* URLCache.m in Sources */ = {isa = PBXBuildFile; fileRef = B6EB1B1417201DEF00C78511 /* URLCache.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -54,6 +55,8 @@
 		B6EB1B0E17200B8D00C78511 /* Article.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Article.h; sourceTree = "<group>"; };
 		B6EB1B0F17200B8D00C78511 /* Article.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Article.m; sourceTree = "<group>"; };
 		B6EB1B1117200CFB00C78511 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
+		B6EB1B1317201DEF00C78511 /* URLCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = URLCache.h; sourceTree = "<group>"; };
+		B6EB1B1417201DEF00C78511 /* URLCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = URLCache.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -145,6 +148,8 @@
 			children = (
 				B6EB1B0E17200B8D00C78511 /* Article.h */,
 				B6EB1B0F17200B8D00C78511 /* Article.m */,
+				B6EB1B1317201DEF00C78511 /* URLCache.h */,
+				B6EB1B1417201DEF00C78511 /* URLCache.m */,
 			);
 			path = Backend;
 			sourceTree = "<group>";
@@ -252,6 +257,7 @@
 				B6EB1AAA171FED6300C78511 /* main.m in Sources */,
 				B6EB1ABB171FF25E00C78511 /* NewsViewController.m in Sources */,
 				B6EB1B1017200B8D00C78511 /* Article.m in Sources */,
+				B6EB1B1517201DEF00C78511 /* URLCache.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
