@@ -1,0 +1,69 @@
+# NSURLCache as an offline persistence store
+
+In the few news and magazine apps I've been working on, we usually fetch the feeds (articles, issues) and assets (images, PDF files) before displaying the content.
+Since we wanted our apps to be available offline, I've developed and seen lots of caching systems based on plist / XML / JSON files, Core Data or some other databases.
+Keeping the local database in sync, implementing a memory cache to avoid hitting the disk too much and making sure we get everything right means additional bugs and maintenance.
+Then you reveive a gentle email from Apple telling you your customers had to reinstall your app to get their 16Gb iPad back to life because you forgot to clean up your cache.
+
+No more.
+With iOS 5 [adding on-disk persistence](http://petersteinberger.com/blog/2012/nsurlcache-uses-a-disk-cache-as-of-ios5/) to [`NSURLCache`](http://developer.apple.com/library/ios/documentation/Cocoa/Reference/Foundation/Classes/NSURLCache_Class/Reference/Reference.html), Apple provided a powerfool tool to solve that issue.
+All you need is a little tip.
+
+## How NSURLCache works
+
+You may have never heard of it, but you use `NSURLCache` every time you send a request with `NSURLConnection`.
+This class is responsible for, you guessed it, storing HTTP responses like Safari, Chrome or Firefox would.
+This is how iOS and Mac OS handle [`304 Not Modified`](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.3.5) responses and avoid sending a network requests when the server has set valid cache headers, even in offline mode.
+That means that if the server sets the right [`Expires` header](http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.21) to an HTTP response, [the network request is never made](http://www.stevesouders.com/blog/2012/03/22/cache-them-if-you-can/) but instead served from the local cache.
+
+## Ignore the outside world
+
+So while your app is downloading the feeds and assets, these are stored in your app's cache folder for future use.
+You can see where this is going: what if you could read from that database in offline mode?
+It turns out you can modify the cached responses as `NSURLConnection` asks for them and mark them as always valid responses, thus forcing local database loading.
+In order to do that, subclass `NSURLCache` and overload the `cachedResponseForRequest:` method:
+
+    - (NSCachedURLResponse *)cachedResponseForRequest:(NSURLRequest *)request {
+        NSCachedURLResponse *cachedResponse = [super cachedResponseForRequest:request];
+
+        if (cachedResponse != nil && [cachedResponse.response isKindOfClass:[NSHTTPURLResponse class]] && self.forceCachedRequests) {
+            NSHTTPURLResponse *originalResponse = (NSHTTPURLResponse *)[cachedResponse response];
+            NSHTTPURLResponse *alteredResponse = nil;
+            NSMutableDictionary *headers = [NSMutableDictionary dictionaryWithDictionary:[originalResponse allHeaderFields]];
+
+            [headers removeObjectForKey:@"Cache-Control"];
+            [headers removeObjectForKey:@"Vary"];
+            [headers setObject:@"Thu, 01 Dec 2050 16:00:00 GMT" forKey:@"Expires"];
+            alteredResponse = [[NSHTTPURLResponse alloc] initWithURL:[originalResponse URL]
+                                                          statusCode:[originalResponse statusCode]
+                                                         HTTPVersion:@"HTTP/1.1"
+                                                        headerFields:headers];
+            cachedResponse = [[NSCachedURLResponse alloc] initWithResponse:alteredResponse
+                                                                      data:[cachedResponse data]
+                                                                  userInfo:[cachedResponse userInfo]
+                                                             storagePolicy:[cachedResponse storagePolicy]];
+        }
+
+        return cachedResponse;
+    }
+
+You then need to instantiate your subclass and set it as the default `NSURLCache` instance by using the `setSharedURLCache:` method.
+A cleaner way to get the same behavior is to set the [`NSURLRequestReturnCacheDataElseLoad`](http://developer.apple.com/library/ios/documentation/Cocoa/Reference/Foundation/Classes/NSURLRequest_Class/Reference/Reference.html) policy on your `NSURLRequest` objects.
+
+That's it: your user will now be able to browse your app in offline mode!
+And with this solution, you get background loading, in-memory cache and size quotas (20Mb on disk and 5Mb in memory by default) for free.
+I've built a [demo project](https://github.com/ndfred/bits) if you want to see a working example: switch to offline mode and restart the app, you should still be able to browse the articles.
+
+## Mind the gap
+
+There are a few limitations that are worth noting:
+
+* only requests that are in the cache will succeed: if the user has not been browsing some parts of the app, these won't work offline.
+* HTTPS requests are never stored in the cache, as well as requests with a `Pragma: no-cache` header. Although you could force `NSURLCache` to store these requests by overriding the `storeCachedResponse:forRequest:` method, the server guys probably have a good reason why you shouldn't.
+* the standard `NSURLCache` disk cache size is 20 MB, if your app needs more than that for offline use you may want to tweak that value.
+* if you have a good reason to use Core Data besides caching, this technique might not suit you.
+* `UIWebView` notices an offline connection and will refuse to load a page even if it's in the cache.
+
+If you want to comment on this article I'm [@ndfred](https://twitter.com/ndfred) on Twitter.
+If you want to learn more about `NSURLCache`, I recommend reading [NSHipster](http://nshipster.com/nsurlcache/) and [Peter Steinberger's blog](http://petersteinberger.com/blog/2012/nsurlcache-uses-a-disk-cache-as-of-ios5/).
+Have a nice subway ride!
