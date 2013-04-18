@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import "NewsViewController.h"
 #import "URLCache.h"
+#import "Reachability.h"
 
 //#define REMOVE_CACHE
 //#define GENERATE_SPLASHSCREEN_IMAGE
@@ -17,7 +18,17 @@
 #import <QuartzCore/QuartzCore.h>
 #endif
 
+@interface AppDelegate ()
+
+- (void)reachabilityDidChange;
+
+@end
+
 @implementation AppDelegate
+
++ (AppDelegate *)sharedDelegate {
+    return (AppDelegate *)[[UIApplication sharedApplication] delegate];
+}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 #ifdef REMOVE_CACHE
@@ -35,7 +46,19 @@
 
     // Setup the URL cache
     [NSURLCache setSharedURLCache:[URLCache new]];
-    [[URLCache sharedURLCache] setForceCachedRequests:YES];
+
+    // Setup reachability
+    {
+        Reachability *reachability = [Reachability reachabilityWithHostname:@"bits.blogs.nytimes.com"];
+
+        self.reachability = reachability;
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(reachabilityDidChange)
+                                                     name:kReachabilityChangedNotification
+                                                   object:reachability];
+        [reachability startNotifier];
+        [self reachabilityDidChange];
+    }
 
     // Setup the view controller
     {
@@ -95,6 +118,13 @@
 #endif
 
     return YES;
+}
+
+- (void)reachabilityDidChange {
+    BOOL isReachable = [self.reachability isReachable];
+
+    NSLog(@"Connection is now %@ (%@)", isReachable ? @"available" : @"unavailable", [self.reachability currentReachabilityString]);
+    [[URLCache sharedURLCache] setForceCachedRequests:!isReachable];
 }
 
 @end

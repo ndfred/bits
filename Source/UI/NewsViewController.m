@@ -8,13 +8,16 @@
 
 #import "NewsViewController.h"
 #import "Article.h"
+#import "AppDelegate.h"
+#import "Reachability.h"
 
-@interface NewsViewController ()
+@interface NewsViewController () <UIWebViewDelegate>
 
 @property NSArray *articles;
 @property NSOperationQueue *downloadQueue;
 
 - (void)refresh;
+- (void)reachabilityDidChange:(NSNotification *)notification;
 
 @end
 
@@ -29,6 +32,10 @@
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh
                                                                                                target:self
                                                                                                action:@selector(refresh)];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(reachabilityDidChange)
+                                                     name:kReachabilityChangedNotification
+                                                   object:[[AppDelegate sharedDelegate] reachability]];
     }
 
     return self;
@@ -43,6 +50,8 @@
 - (void)refresh {
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://bits.blogs.nytimes.com/feed/"]];
 
+    NSLog(@"Refreshing the articles list");
+    self.navigationItem.rightBarButtonItem.enabled = NO;
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     [NSURLConnection sendAsynchronousRequest:request queue:self.downloadQueue completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
         if (error == nil) {
@@ -50,10 +59,28 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.tableView reloadData];
             });
+        } else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[[UIAlertView alloc] initWithTitle:@"Error fetching the articles"
+                                            message:[error localizedDescription]
+                                           delegate:nil
+                                  cancelButtonTitle:nil
+                                  otherButtonTitles:@"OK", nil] show];
+            });
         }
 
-        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.navigationItem.rightBarButtonItem.enabled = [[[AppDelegate sharedDelegate] reachability] isReachable];
+            [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+        });
     }];
+}
+
+- (void)reachabilityDidChange {
+    BOOL isReachable = [[[AppDelegate sharedDelegate] reachability] isReachable];
+
+    if (isReachable) [self refresh];
+    self.navigationItem.rightBarButtonItem.enabled = isReachable;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -101,10 +128,19 @@
     UIViewController *webViewController = [UIViewController new];
     UIWebView *webView = [UIWebView new];
 
-    webViewController.title = @"There’s Something About Smartwatches";
+    webViewController.title = article.title;
     webViewController.view = webView;
     [webView loadRequest:request];
+    webView.delegate = self;
     [self.navigationController pushViewController:webViewController animated:YES];
+}
+
+- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
+    [[[UIAlertView alloc] initWithTitle:@"Error loading the website"
+                                message:[error localizedDescription]
+                               delegate:nil
+                      cancelButtonTitle:nil
+                      otherButtonTitles:@"OK", nil] show];
 }
 
 @end

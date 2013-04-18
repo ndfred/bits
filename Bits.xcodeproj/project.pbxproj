@@ -27,6 +27,8 @@
 		B6EB1B1017200B8D00C78511 /* Article.m in Sources */ = {isa = PBXBuildFile; fileRef = B6EB1B0F17200B8D00C78511 /* Article.m */; };
 		B6EB1B1217200CFB00C78511 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B6EB1B1117200CFB00C78511 /* libxml2.dylib */; };
 		B6EB1B1517201DEF00C78511 /* URLCache.m in Sources */ = {isa = PBXBuildFile; fileRef = B6EB1B1417201DEF00C78511 /* URLCache.m */; };
+		B6EB1B4F172025F200C78511 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = B6EB1B3C172025F200C78511 /* Reachability.m */; };
+		B6EB1B5A1720265B00C78511 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B6EB1B591720265B00C78511 /* SystemConfiguration.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -57,6 +59,10 @@
 		B6EB1B1117200CFB00C78511 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		B6EB1B1317201DEF00C78511 /* URLCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = URLCache.h; sourceTree = "<group>"; };
 		B6EB1B1417201DEF00C78511 /* URLCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = URLCache.m; sourceTree = "<group>"; };
+		B6EB1B18172025F100C78511 /* download.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = download.sh; sourceTree = "<group>"; };
+		B6EB1B3B172025F200C78511 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		B6EB1B3C172025F200C78511 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
+		B6EB1B591720265B00C78511 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,6 +70,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B6EB1B5A1720265B00C78511 /* SystemConfiguration.framework in Frameworks */,
 				B6EB1B1217200CFB00C78511 /* libxml2.dylib in Frameworks */,
 				B6EB1A83171FECAB00C78511 /* UIKit.framework in Frameworks */,
 				B6EB1A85171FECAB00C78511 /* Foundation.framework in Frameworks */,
@@ -79,6 +86,7 @@
 			children = (
 				B6EB1AA1171FED6300C78511 /* Source */,
 				B6EB1A9F171FED6300C78511 /* Resources */,
+				B6EB1B16172025F100C78511 /* Externals */,
 				B6EB1A81171FECAB00C78511 /* Frameworks */,
 				B6EB1A80171FECAB00C78511 /* Products */,
 			);
@@ -98,6 +106,7 @@
 				B6EB1A82171FECAB00C78511 /* UIKit.framework */,
 				B6EB1A84171FECAB00C78511 /* Foundation.framework */,
 				B6EB1A86171FECAB00C78511 /* CoreGraphics.framework */,
+				B6EB1B591720265B00C78511 /* SystemConfiguration.framework */,
 				B6EB1B1117200CFB00C78511 /* libxml2.dylib */,
 			);
 			name = Frameworks;
@@ -161,6 +170,24 @@
 				B6EB1ABA171FF25E00C78511 /* NewsViewController.m */,
 			);
 			path = UI;
+			sourceTree = "<group>";
+		};
+		B6EB1B16172025F100C78511 /* Externals */ = {
+			isa = PBXGroup;
+			children = (
+				B6EB1B19172025F100C78511 /* Reachability */,
+				B6EB1B18172025F100C78511 /* download.sh */,
+			);
+			path = Externals;
+			sourceTree = "<group>";
+		};
+		B6EB1B19172025F100C78511 /* Reachability */ = {
+			isa = PBXGroup;
+			children = (
+				B6EB1B3B172025F200C78511 /* Reachability.h */,
+				B6EB1B3C172025F200C78511 /* Reachability.m */,
+			);
+			path = Reachability;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -243,7 +270,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = "/bin/sh -e";
-			shellScript = "\"$SRCROOT/Resources/download_assets.sh\"";
+			shellScript = "\"$SRCROOT/Externals/download.sh\"\n\"$SRCROOT/Resources/download_assets.sh\"";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -258,6 +285,7 @@
 				B6EB1ABB171FF25E00C78511 /* NewsViewController.m in Sources */,
 				B6EB1B1017200B8D00C78511 /* Article.m in Sources */,
 				B6EB1B1517201DEF00C78511 /* URLCache.m in Sources */,
+				B6EB1B4F172025F200C78511 /* Reachability.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

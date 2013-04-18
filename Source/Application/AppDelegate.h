@@ -8,8 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
+@class Reachability;
+
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
-@property (strong, nonatomic) UIWindow *window;
+@property (nonatomic) UIWindow *window;
+@property (nonatomic) Reachability *reachability;
+
++ (AppDelegate *)sharedDelegate;
 
 @end
