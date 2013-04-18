@@ -135,6 +135,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = B6EB1A9C171FECAB00C78511 /* Build configuration list for PBXNativeTarget "Bits" */;
 			buildPhases = (
+				B6EB1ABC171FF96200C78511 /* ShellScript */,
 				B6EB1A7B171FECAB00C78511 /* Sources */,
 				B6EB1A7C171FECAB00C78511 /* Frameworks */,
 				B6EB1A7D171FECAB00C78511 /* Resources */,
@@ -187,6 +188,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		B6EB1ABC171FF96200C78511 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = "/bin/sh -e";
+			shellScript = "\"$SRCROOT/Resources/download_assets.sh\"";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		B6EB1A7B171FECAB00C78511 /* Sources */ = {

@@ -1,6 +1,8 @@
 #!/bin/sh -ex
 
-if [ ! -f Icon.png ]
+cd "`dirname $0`"
+
+if [ ! -f Icon-72@2x.png ]
 then
   rm -f Logo.png Icon.png Icon@2x.png Icon-72.png Icon-72@2x.png
   curl -s -L -o Logo.png "https://api.twitter.com/1/users/profile_image?screen_name=nytimesbits&size=original"
