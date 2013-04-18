@@ -71,10 +71,12 @@
 
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier];
+        cell.textLabel.font = [UIFont boldSystemFontOfSize:14.0f];
+        cell.textLabel.numberOfLines = 2;
     }
 
     cell.textLabel.text = article.title;
-    cell.imageView.image = [UIImage imageNamed:@"Icon.png"];
+    cell.imageView.image = [UIImage imageNamed:@"Icon-72.png"];
 
     if (article.imageURL != nil) {
         NSURLRequest *request = [[NSURLRequest alloc] initWithURL:article.imageURL];
